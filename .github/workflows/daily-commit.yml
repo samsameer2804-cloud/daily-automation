@@ -1,0 +1,26 @@
+name: Daily GitHub Contribution Automation
+
+on:
+  schedule:
+    # This runs the job every day at 12:00 PM UTC (5:30 PM IST)
+    - cron: '0 12 * * *'
+  workflow_dispatch: # This allows you to also trigger it manually whenever you want
+
+jobs:
+  make-contribution:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Update Activity Log
+      run: |
+        echo "Automated contribution on $(date)" >> activity_log.txt
+
+    - name: Commit and Push Changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Action"
+        git add activity_log.txt
+        git commit -m "docs: automated daily activity log update"
+        git push
